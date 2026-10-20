@@ -62,8 +62,19 @@ $('status-filter').addEventListener('change', renderLists);
 $('priority-filter').addEventListener('change', renderLists);
 $('ticket-search').addEventListener('input', renderLists);
 $('clear-filters').addEventListener('click', () => { $('status-filter').value = 'todos'; $('priority-filter').value = 'todas'; $('ticket-search').value = ''; renderLists(); });
-$('reset-demo').addEventListener('click', () => { if (!window.confirm('Restaurar os quatro chamados fictícios iniciais? Todas as alterações desta sessão serão descartadas.')) return; tickets = structuredClone(examples); selectedId = null; $('new-form').reset(); $('clear-filters').click(); show('inicio'); });
+$('reset-demo').addEventListener('click', () => { if (!window.confirm('Restaurar os quatro chamados fictícios iniciais? Todas as alterações desta sessão serão descartadas.')) return; tickets = structuredClone(examples); selectedId = null; $('new-form').reset(); updateEquipmentMatch(); $('clear-filters').click(); show('inicio'); });
 $('role').addEventListener('change', event => { role = event.target.value; if (!$('detalhe').hidden && selectedId !== null) showTicket(selectedId); });
+function updateEquipmentMatch() {
+  const form = $('new-form');
+  const inventory = form.elements.inventory.value.trim().toLocaleLowerCase('pt-BR');
+  const serial = form.elements.serial.value.trim().toLocaleLowerCase('pt-BR');
+  const matches = tickets.filter(t => (inventory && t.inventory && t.inventory.toLocaleLowerCase('pt-BR') === inventory) || (serial && t.serial && t.serial.toLocaleLowerCase('pt-BR') === serial));
+  const notice = $('equipment-match');
+  notice.hidden = matches.length === 0;
+  notice.textContent = matches.length ? 'Equipamento encontrado em chamado(s) fictício(s): ' + matches.map(t => '#' + String(t.id).padStart(4, '0')).join(', ') + '. Confira antes de abrir outro chamado.' : '';
+}
+$('new-form').elements.inventory.addEventListener('input', updateEquipmentMatch);
+$('new-form').elements.serial.addEventListener('input', updateEquipmentMatch);
 $('new-form').addEventListener('submit', event => {
   event.preventDefault();
   const form = event.currentTarget;
@@ -73,6 +84,7 @@ $('new-form').addEventListener('submit', event => {
   const getText = name => String(data.get(name) || '').trim();
   tickets.unshift({ id, inventory: getText('inventory'), serial: getText('serial'), brand: getText('brand'), model: getText('model'), sector: getText('sector'), phone: getText('phone'), title: String(data.get('title')).trim(), category: String(data.get('category')), priority: String(data.get('priority')), description: String(data.get('description')).trim(), status: 'Aberto', events: [{ title: 'Chamado registrado', note: 'Criado neste protótipo offline, sem envio ao servidor.' }] });
   form.reset();
+  updateEquipmentMatch();
   showTicket(id);
 });
 show('inicio');
