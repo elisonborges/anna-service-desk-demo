@@ -23,7 +23,12 @@ jobs:
             grep -q "id=\"$id\"" index.html
           done
           grep -q 'DEMONSTRAÇÃO PÚBLICA' index.html
-          ! grep -Ei 'fetch\\(|XMLHttpRequest|WebSocket|localStorage|sessionStorage|api-client|dev-login' app.js index.html
+          for forbidden in 'fetch(' 'XMLHttpRequest' 'WebSocket' 'localStorage' 'sessionStorage' 'api-client' 'dev-login'; do
+            if grep -Fiq "$forbidden" app.js index.html; then
+              echo "Forbidden browser integration: $forbidden" >&2
+              exit 1
+            fi
+          done
           ! grep -Ei 'DATABASE_URL|JWT_|NEON_|SUPABASE_' index.html app.js
           for field in inventory serial brand model sector phone; do
             grep -q "name=\"$field\"" index.html
