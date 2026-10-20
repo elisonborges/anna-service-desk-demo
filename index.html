@@ -18,14 +18,41 @@
         <button class="nav-item" data-view="chamados">Chamados</button>
         <button class="nav-item" data-view="novo">Abrir chamado</button>
       </nav>
-      <div class="side-foot">Demonstração pública · v0.2<br />Dados fictícios em memória</div>
+      <div class="side-foot">Demonstração pública · v0.3<br />Dados fictícios em memória</div>
     </aside>
     <main class="main">
       <header class="topbar"><div><div class="eyebrow">CENTRAL DE ATENDIMENTO</div><h1 id="page-title">Visão geral</h1></div><div class="top-actions"><label for="role">Visualizar como</label><select id="role"><option value="solicitante">Solicitante</option><option value="tecnico">Técnico (simulação)</option></select><button id="reset-demo" class="secondary" type="button" title="Restaurar dados fictícios">Reiniciar demo</button><button id="new-top" class="primary">+ Novo chamado</button></div></header>
       <div class="notice" role="status"><strong>DEMONSTRAÇÃO PÚBLICA — NÃO INSIRA DADOS REAIS.</strong> Esta página usa somente exemplos fictícios e funciona no navegador. Nenhuma informação é enviada ao Neon. Alterações desaparecem ao atualizar a página.</div>
       <section id="inicio" class="view"><div class="stats"><article class="stat"><span>Meus chamados</span><strong id="total">0</strong><small>Registros fictícios</small></article><article class="stat"><span>Em andamento</span><strong id="andamento">0</strong><small>Acompanhamento</small></article><article class="stat"><span>Pendentes</span><strong id="pendentes">0</strong><small>Aguardando ação</small></article><article class="stat"><span>Resolvidos</span><strong id="resolvidos">0</strong><small>Histórico</small></article></div><div class="panel"><div class="panel-head"><div><h2>Chamados recentes</h2><p>Acompanhe solicitações e atualizações.</p></div><button data-view="chamados" class="secondary">Ver todos</button></div><div id="recent-list" class="ticket-list"></div></div></section>
-      <section id="chamados" class="view" hidden><div class="panel"><div class="panel-head"><div><h2>Lista de chamados</h2><p>Selecione um chamado para consultar o histórico.</p></div><div class="list-controls"><label>Pesquisar <input id="ticket-search" type="search" placeholder="Título, categoria ou número" autocomplete="off" /></label><label>Prioridade <select id="priority-filter"><option value="todas">Todas</option><option>Baixa</option><option>Normal</option><option>Alta</option></select></label><label class="filter">Status <select id="status-filter"><option value="todos">Todos</option><option value="Aberto">Aberto</option><option value="Em andamento">Em andamento</option><option value="Pendente">Pendente</option><option value="Resolvido">Resolvido</option></select></label><button type="button" class="secondary" id="clear-filters">Limpar filtros</button></div></div><p id="filter-count" class="filter-count" role="status"></p><div id="ticket-list" class="ticket-list"></div></div></section>
-      <section id="novo" class="view" hidden><div class="panel form-panel"><h2>Abrir novo chamado</h2><p>Preencha as informações da solicitação de teste.</p><form id="new-form"><label>Título <input name="title" required minlength="5" maxlength="100" placeholder="Ex.: Computador não inicia" /></label><label>Categoria <select name="category" required><option value="">Selecione</option><option>Computadores</option><option>Rede e internet</option><option>Sistemas</option><option>Impressoras</option><option>Outros</option></select></label><label>Prioridade <select name="priority"><option>Normal</option><option>Baixa</option><option>Alta</option></select></label><label>Descrição <textarea name="description" required minlength="10" maxlength="2000" rows="5" placeholder="Descreva o problema e o que já foi tentado."></textarea></label><div class="form-actions"><button type="button" class="secondary" data-view="chamados">Cancelar</button><button type="submit" class="primary">Registrar chamado de teste</button></div></form></div></section>
+      <section id="chamados" class="view" hidden><div class="panel"><div class="panel-head"><div><h2>Lista de chamados</h2><p>Selecione um chamado para consultar o histórico.</p></div><div class="list-controls"><label>Pesquisar <input id="ticket-search" type="search" placeholder="Chamado, inventário, série..." autocomplete="off" /></label><label>Prioridade <select id="priority-filter"><option value="todas">Todas</option><option>Baixa</option><option>Normal</option><option>Alta</option></select></label><label class="filter">Status <select id="status-filter"><option value="todos">Todos</option><option value="Aberto">Aberto</option><option value="Em andamento">Em andamento</option><option value="Pendente">Pendente</option><option value="Resolvido">Resolvido</option></select></label><button type="button" class="secondary" id="clear-filters">Limpar filtros</button></div></div><p id="filter-count" class="filter-count" role="status"></p><div id="ticket-list" class="ticket-list"></div></div></section>
+      <section id="novo" class="view" hidden>
+        <div class="form-panel">
+          <h2>Abrir novo chamado</h2>
+          <p>Use somente informações fictícias nesta demonstração.</p>
+          <form id="new-form">
+            <fieldset class="form-group"><legend>1. Identificação do equipamento</legend>
+              <p>Preencha os dados conhecidos. Inventário e número de série ajudam a localizar o equipamento.</p>
+              <div class="form-grid">
+                <label>Número de inventário <input name="inventory" maxlength="40" placeholder="Ex.: INV-0042" autocomplete="off" /></label>
+                <label>Número de série <input name="serial" maxlength="80" placeholder="Ex.: SN-DEMO-204" autocomplete="off" /></label>
+                <label>Marca <input name="brand" maxlength="60" placeholder="Ex.: Marca demonstrativa" /></label>
+                <label>Modelo <input name="model" maxlength="80" placeholder="Ex.: Modelo A" /></label>
+                <label class="full-width">Setor <input name="sector" maxlength="100" placeholder="Ex.: Secretaria" /></label>
+              </div>
+            </fieldset>
+            <fieldset class="form-group"><legend>2. Dados do chamado e contato</legend>
+              <div class="form-grid">
+                <label class="full-width">Título <input name="title" required minlength="5" maxlength="100" placeholder="Ex.: Computador não inicia" /></label>
+                <label>Categoria <select name="category" required><option value="">Selecione</option><option>Computadores</option><option>Rede e internet</option><option>Sistemas</option><option>Impressoras</option><option>Outros</option></select></label>
+                <label>Prioridade <select name="priority"><option>Normal</option><option>Baixa</option><option>Alta</option></select></label>
+                <label class="full-width">Telefone para contato <input name="phone" type="tel" inputmode="tel" maxlength="25" placeholder="Ex.: (00) 90000-0000 — fictício" /></label>
+                <label class="full-width">Descrição <textarea name="description" required minlength="10" maxlength="2000" rows="5" placeholder="Descreva o problema e o que já foi tentado."></textarea></label>
+              </div>
+            </fieldset>
+            <div class="form-actions"><button type="button" class="secondary" data-view="chamados">Cancelar</button><button type="submit" class="primary">Registrar chamado de teste</button></div>
+          </form>
+        </div>
+      </section>
       <section id="detalhe" class="view" hidden><button id="back" class="text-button">← Voltar aos chamados</button><div class="panel detail-panel"><div id="detail-content"></div></div></section>
       <footer>AnnA Service Desk · Demonstração visual sem autenticação real, banco de dados ou suporte operacional</footer>
     </main>
