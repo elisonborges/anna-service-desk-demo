@@ -1,7 +1,7 @@
 name: Demo Branch Checks
 on:
   push:
-    branches: [dev/demo-polish-20261020]
+    branches: [dev/demo-polish-20261020, dev/demo-equipment-fields-20261020]
   workflow_dispatch:
 permissions:
   contents: read
@@ -23,7 +23,17 @@ jobs:
             grep -q "id=\"$id\"" index.html
           done
           grep -q 'DEMONSTRAÇÃO PÚBLICA' index.html
-          ! grep -Ei 'fetch\\(|XMLHttpRequest|WebSocket|localStorage|sessionStorage|api-client|dev-login' app.js index.html
+          for forbidden in 'fetch(' 'XMLHttpRequest' 'WebSocket' 'localStorage' 'sessionStorage' 'api-client' 'dev-login'; do
+            if grep -Fiq "$forbidden" app.js index.html; then
+              echo "Forbidden browser integration: $forbidden" >&2
+              exit 1
+            fi
+          done
           ! grep -Ei 'DATABASE_URL|JWT_|NEON_|SUPABASE_' index.html app.js
+          for field in inventory serial brand model sector phone; do
+            grep -q "name=\"$field\"" index.html
+          done
+          grep -q 'ticket.inventory' app.js
+          grep -q 'ticket.serial' app.js
           test -f styles.css
           test -f anna-symbol.svg
