@@ -27,7 +27,10 @@ function renderLists() {
   $('resolvidos').textContent = tickets.filter(t => t.status === 'Resolvido').length;
   $('recent-list').innerHTML = tickets.slice(0, 4).map(ticketHtml).join('');
   const filter = $('status-filter').value;
-  const filtered = tickets.filter(t => filter === 'todos' || t.status === filter);
+  const query = $('ticket-search').value.trim().toLocaleLowerCase('pt-BR');
+  const priority = $('priority-filter').value;
+  const filtered = tickets.filter(t => (filter === 'todos' || t.status === filter) && (priority === 'todas' || t.priority === priority) && (!query || [t.id.toString().padStart(4,'0'), t.title, t.category, t.description].some(value => value.toLocaleLowerCase('pt-BR').includes(query))));
+  $('filter-count').textContent = `${filtered.length} de ${tickets.length} chamados fictícios exibidos`;
   $('ticket-list').innerHTML = filtered.length ? filtered.map(ticketHtml).join('') : '<div class="empty">Nenhum chamado encontrado.</div>';
 }
 function showTicket(id) {
@@ -55,6 +58,10 @@ document.addEventListener('click', event => {
 $('new-top').addEventListener('click', () => show('novo'));
 $('back').addEventListener('click', () => show('chamados'));
 $('status-filter').addEventListener('change', renderLists);
+$('priority-filter').addEventListener('change', renderLists);
+$('ticket-search').addEventListener('input', renderLists);
+$('clear-filters').addEventListener('click', () => { $('status-filter').value = 'todos'; $('priority-filter').value = 'todas'; $('ticket-search').value = ''; renderLists(); });
+$('reset-demo').addEventListener('click', () => { if (!window.confirm('Restaurar os quatro chamados fictícios iniciais? Todas as alterações desta sessão serão descartadas.')) return; tickets = structuredClone(examples); selectedId = null; $('new-form').reset(); $('clear-filters').click(); show('inicio'); });
 $('role').addEventListener('change', event => { role = event.target.value; if (!$('detalhe').hidden && selectedId !== null) showTicket(selectedId); });
 $('new-form').addEventListener('submit', event => {
   event.preventDefault();
