@@ -1,0 +1,29 @@
+name: Demo Branch Checks
+on:
+  push:
+    branches: [dev/demo-polish-20261020]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: node --check app.js
+      - name: Demo HTML contract and no backend calls
+        shell: bash
+        run: |
+          set -euo pipefail
+          for id in ticket-search priority-filter clear-filters reset-demo status-filter ticket-list new-form; do
+            grep -q "id=\"$id\"" index.html
+          done
+          grep -q 'DEMONSTRAÇÃO PÚBLICA' index.html
+          ! grep -Ei 'fetch\\(|XMLHttpRequest|WebSocket|localStorage|sessionStorage|api-client|dev-login' app.js index.html
+          ! grep -Ei 'DATABASE_URL|JWT_|NEON_|SUPABASE_' index.html app.js
+          test -f styles.css
+          test -f anna-symbol.svg
