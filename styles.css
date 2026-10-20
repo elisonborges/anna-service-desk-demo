@@ -33,3 +33,5 @@
 .equipment-details dd{font-weight:650;margin:0;overflow-wrap:anywhere}
 .detail-empty{margin:12px 0 24px}
 @media(max-width:650px){.form-group{padding:17px}.form-grid,.equipment-details{grid-template-columns:1fr}.form-grid .full-width{grid-column:auto}}
+
+.equipment-match:not([hidden]){margin:14px 0 0;padding:12px 14px;background:#fff8e7;border:1px solid #f1d9a0;border-radius:9px;color:#775318;font-size:13px;line-height:1.5}
